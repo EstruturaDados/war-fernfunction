@@ -28,6 +28,10 @@
 #define TAM_COR 16
 #define MISSAO_DESTRUIR_VERDE 1
 #define MISSAO_CONQUISTAR_3 2
+// Dependência para a correção de locale para consoles cp-850 no windows
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 // --- Estrutura de Dados ---
 // Define a estrutura para um território, contendo seu nome, a cor do exército que o domina e o número de tropas.
@@ -60,6 +64,11 @@ void limparBufferEntrada(void);
 // Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
 int main()
 {
+    #ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    #endif
+    
     setlocale(LC_ALL, "pt_BR.UTF-8");
     srand((unsigned)time(NULL));
     Territorio *mapa = alocarMapa(QTD_TERRITORIOS);
