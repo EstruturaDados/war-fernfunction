@@ -28,13 +28,17 @@
 #define TAM_COR 16
 #define MISSAO_DESTRUIR_VERDE 1
 #define MISSAO_CONQUISTAR_3 2
+
 // Dependência para a correção de locale para consoles cp-850 no windows
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 // --- Estrutura de Dados ---
-// Define a estrutura para um território, contendo seu nome, a cor do exército que o domina e o número de tropas.
+
+/**
+ * Estrutura que representa um território no jogo.
+ */
 typedef struct
 {
     char nome[TAM_NOME];
@@ -45,30 +49,76 @@ typedef struct
 // --- Protótipos das Funções ---
 // Declarações antecipadas de todas as funções que serão usadas no programa, organizadas por categoria.
 // Funções de setup e gerenciamento de memória:
+
+/**
+ * Aloca memória para o mapa de territórios. Retorna um ponteiro para o array alocado.
+ */
 Territorio *alocarMapa(size_t qtd);
+/**
+ * Libera a memória alocada para o mapa de territórios.
+ */
 void liberarMemoria(Territorio *mapa);
+
 // Funções de interface com o usuário:
+
+/**
+ * Exibe o menu principal do jogo.
+ */
 void exibirMenuPrincipal(void);
+/**
+ * Exibe o mapa de territórios, destacando os territórios do jogador.
+ */
 void exibirMapa(const Territorio *mapa, size_t qtd, const char *corJogador);
+/**
+ * Exibe a missão atual do jogador. 
+ */
 void exibirMissao(int missaoId);
+
 // Funções de lógica principal do jogo:
+
+/**
+ * Inicializa os territórios com nomes, cores e tropas padrão.
+ */
 void inicializarTerritorios(Territorio *mapa, size_t qtd);
+/**
+ * Executa a fase de ataque, permitindo ao jogador escolher territórios para atacar e defender.
+ */
 void faseDeAtaque(Territorio *mapa, size_t qtd, const char *corJogador);
+/**
+ * Simula um ataque entre dois territórios e retorna se o território defensor foi conquistado.
+ */
 int simularAtaque(Territorio *mapa, size_t qtd, int idxAtacante, int idxDefensor, const char *corJogador);
+/**
+ * Sorteia uma missão para o jogador com base na cor escolhida. Missões podem ser:
+ * 1. Destruir o exército Verde.
+ * 2. Conquistar 3 territórios.
+ * 
+ * Retorna o ID da missão sorteada.
+ */
 int sortearMissao(const char *corJogador);
+/**
+ * Verifica se o jogador cumpriu sua missão atual.
+ * Retorna 1 se a missão foi cumprida, 0 caso contrário.
+ */
 int verificarVitoria(const Territorio *mapa, size_t qtd, const char *corJogador, int missaoId);
+
 // Função utilitária:
+
+/**
+ * Limpa o buffer de entrada para evitar problemas com entradas inválidas.
+ */
 void limparBufferEntrada(void);
 
-// --- Função Principal (main) ---
-// Função principal que orquestra o fluxo do jogo, chamando as outras funções em ordem.
+/**
+ * Função principal do programa. Contém o loop principal do jogo, gerenciando a interação com o jogador e o fluxo do jogo.
+ */
 int main()
 {
     #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     #endif
-    
+
     setlocale(LC_ALL, "pt_BR.UTF-8");
     srand((unsigned)time(NULL));
     Territorio *mapa = alocarMapa(QTD_TERRITORIOS);
@@ -153,6 +203,7 @@ int main()
 }
 
 // --- Implementação das Funções ---
+
 Territorio *alocarMapa(size_t qtd)
 {
     Territorio *mapa = (Territorio *)calloc(qtd, sizeof(Territorio));
